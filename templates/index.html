@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Atlas</title>
+</head>
+<body>
+
+<h2>Consulta Atlas</h2>
+
+<input type="date" id="fecha">
+
+<select id="turno">
+    <option value="DIURNO">DIURNO</option>
+    <option value="NOCTURNO">NOCTURNO</option>
+</select>
+
+<button onclick="consultar()">Consultar</button>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Registros</th>
+            <th>Vuelos</th>
+        </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+</table>
+
+<script>
+function consultar() {
+    let fecha = document.getElementById("fecha").value;
+    let turno = document.getElementById("turno").value;
+
+    fetch("/consultar", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: `fecha=${fecha}&turno=${turno}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        let tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+
+        data.forEach(r => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${r.usuario}</td>
+                    <td>${r.REGISTROS}</td>
+                    <td>${r.VUELOS}</td>
+                </tr>
+            `;
+        });
+    });
+}
+</script>
+
+</body>
+</html>
